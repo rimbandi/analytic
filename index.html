@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Hello Analytics - A quickstart guide for JavaScript</title>
+</head>
+
+adadasdas
+asdasdasd
+asdadasdas
+
+<body>
+
+    <div id="embed-api-auth-container"></div>
+    <div id="chart-container"></div>
+    <div id="view-selector-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        var idleTime = 0;
+        $(document).ready(function() {
+            //Increment the idle time counter every minute.
+            var idleInterval = setInterval(timerIncrement, 1000); // 1 minute
+
+            //Zero the idle timer on mouse movement.
+            $(this).mousemove(function(e) {
+                idleTime = 0;
+            });
+            $(this).keypress(function(e) {
+                idleTime = 0;
+            });
+        });
+
+        function timerIncrement() {
+            idleTime = idleTime + 1;
+            if (idleTime > 5) { // 20 minutes
+                //window.location.reload(); //Refresh the window
+                window.location = "https://www.aremamediaonline.com";
+            }
+        }
+    </script>
+
+    <script>
+        (function(w, d, s, g, js, fs) {
+            g = w.gapi || (w.gapi = {});
+            g.analytics = {
+                q: [],
+                ready: function(f) {
+                    this.q.push(f);
+                }
+            };
+            js = d.createElement(s);
+            fs = d.getElementsByTagName(s)[0];
+            js.src = 'https://apis.google.com/js/platform.js';
+            fs.parentNode.insertBefore(js, fs);
+            js.onload = function() {
+                g.load('analytics');
+            };
+        }(window, document, 'script'));
+    </script>
+
+    <script>
+        gapi.analytics.ready(function() {
+
+            /**
+             * Authorize the user immediately if the user has already granted access.
+             * If no access has been created, render an authorize button inside the
+             * element with the ID "embed-api-auth-container".
+             */
+            gapi.analytics.auth.authorize({
+                container: 'embed-api-auth-container',
+                clientid: '13647451927-k9ltcii987e7imf74eai2aflpoqimnnv.apps.googleusercontent.com'
+            });
+
+
+            /**
+             * Create a new ViewSelector instance to be rendered inside of an
+             * element with the id "view-selector-container".
+             */
+            var viewSelector = new gapi.analytics.ViewSelector({
+                container: 'view-selector-container'
+            });
+
+            // Render the view selector to the page.
+            viewSelector.execute();
+
+
+            /**
+             * Create a new DataChart instance with the given query parameters
+             * and Google chart options. It will be rendered inside an element
+             * with the id "chart-container".
+             */
+            var dataChart = new gapi.analytics.googleCharts.DataChart({
+                query: {
+                    metrics: 'ga:sessions',
+                    dimensions: 'ga:date',
+                    'start-date': '30daysAgo',
+                    'end-date': 'yesterday'
+                },
+                chart: {
+                    container: 'chart-container',
+                    type: 'LINE',
+                    options: {
+                        width: '100%'
+                    }
+                }
+            });
+
+
+            /**
+             * Render the dataChart on the page whenever a new view is selected.
+             */
+            viewSelector.on('change', function(ids) {
+                dataChart.set({
+                    query: {
+                        ids: ids
+                    }
+                }).execute();
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>
